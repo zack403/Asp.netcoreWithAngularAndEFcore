@@ -1,4 +1,4 @@
-import { MakeService } from "./Services/make.service";
+import { VehicleService } from "./Services/vehicle.service";
 import { BrowserModule } from "@angular/platform-browser";
 // tslint:disable-next-line:quotemark
 import { NgModule } from "@angular/core";
@@ -33,7 +33,7 @@ import { VehicleFormComponent } from "./components/vehicle-form/vehicle-form.com
       { path: "fetch-data", component: FetchDataComponent }
     ])
   ],
-  providers: [MakeService],
+  providers: [VehicleService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

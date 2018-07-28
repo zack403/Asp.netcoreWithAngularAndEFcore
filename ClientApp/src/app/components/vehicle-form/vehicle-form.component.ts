@@ -1,4 +1,4 @@
-import { MakeService } from "./../../Services/make.service";
+import { VehicleService } from "./../../Services/vehicle.service";
 import { Component, OnInit, AnimationKeyframe } from "@angular/core";
 
 @Component({
@@ -10,12 +10,20 @@ export class VehicleFormComponent implements OnInit {
   makes: any;
   models: any[];
   vehicle: any = {};
-  constructor(private makeservice: MakeService) {}
+  features;
+
+  constructor(
+    private vehicleservice: VehicleService,
+  ) {}
 
   ngOnInit() {
-    this.makeservice.getMakes().subscribe(response => {
+    this.vehicleservice.getMakes().subscribe(response => {
       this.makes = response;
       console.log(this.makes);
+    });
+
+    this.vehicleservice.getFeatures().subscribe(response => {
+      this.features = response;
     });
   }
 
