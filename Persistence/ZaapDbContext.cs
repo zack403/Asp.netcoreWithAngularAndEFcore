@@ -8,6 +8,8 @@ namespace Zaap.Persistence
         public DbSet<Make> Makes { get; set; }
         public DbSet<Feauture> Feautures { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<Model> Models { get; set; }
+
         public ZaapDbContext(DbContextOptions<ZaapDbContext> options)
             : base(options)
         {
