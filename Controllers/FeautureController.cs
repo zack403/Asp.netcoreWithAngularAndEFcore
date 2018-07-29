@@ -20,10 +20,10 @@ namespace Zaap.Controllers
 
         }
         [HttpGet("/api/feautures")]
-        public async Task<IEnumerable<FeautureResource>> GetFeauture()
+        public async Task<IEnumerable<KeyValuePairResource>> GetFeauture()
         {
             var features = await context.Feautures.ToListAsync();
-            return mapper.Map<List<Feauture>, List<FeautureResource>>(features);
+            return mapper.Map<List<Feauture>, List<KeyValuePairResource>>(features);
         }
 
     }
