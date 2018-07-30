@@ -16,8 +16,10 @@ namespace Zaap.Controllers
     {
         private readonly IMapper mapper;
         private readonly ZaapDbContext context;
-        public VehiclesController(IMapper mapper, ZaapDbContext context)
+        private readonly IVehicleRepository repository;
+        public VehiclesController(IMapper mapper, ZaapDbContext context, IVehicleRepository repository)
         {
+            this.repository = repository;
             this.context = context;
             this.mapper = mapper;
 
@@ -34,12 +36,7 @@ namespace Zaap.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVehicleById(int id)
         {
-            var vehicle = await context.Vehicles
-            .Include(v => v.Features)
-            .ThenInclude(vf => vf.Feature)
-            .Include(v => v.Model)
-            .ThenInclude(m => m.Make)
-            .SingleOrDefaultAsync(v => v.Id == id);
+            var vehicle = await repository.GetVehicle(id);
 
             if (vehicle == null)
             {
@@ -68,12 +65,7 @@ namespace Zaap.Controllers
             context.Vehicles.Add(vehicle);
             await context.SaveChangesAsync();
 
-            vehicle = await context.Vehicles
-          .Include(v => v.Features)
-          .ThenInclude(vf => vf.Feature)
-          .Include(v => v.Model)
-          .ThenInclude(m => m.Make)
-          .SingleOrDefaultAsync(v => v.Id == vehicle.Id);
+            vehicle = await repository.GetVehicle(vehicle.Id);
 
             var result = mapper.Map<Vehicle, VehicleResource>(vehicle);
             return Ok(result);
@@ -88,12 +80,8 @@ namespace Zaap.Controllers
                 return BadRequest(ModelState);
 
             }
-            var vehicle = await context.Vehicles
-                       .Include(v => v.Features)
-                       .ThenInclude(vf => vf.Feature)
-                       .Include(v => v.Model)
-                       .ThenInclude(m => m.Make)
-                       .SingleOrDefaultAsync(v => v.Id == id);
+            var vehicle = await repository.GetVehicle(id);
+
             if (vehicle == null)
             {
                 return NotFound($"the id {id} cannot be found");

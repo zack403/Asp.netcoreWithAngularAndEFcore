@@ -4,7 +4,7 @@ using Zaap.Models;
 
 namespace Zaap.Persistence
 {
-    public class VehicleRepository
+    public class VehicleRepository : IVehicleRepository
     {
         private readonly ZaapDbContext context;
         public VehicleRepository(ZaapDbContext context)
