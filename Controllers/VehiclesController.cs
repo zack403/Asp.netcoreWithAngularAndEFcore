@@ -17,10 +17,11 @@ namespace Zaap.Controllers
         private readonly IMapper mapper;
         private readonly ZaapDbContext context;
         private readonly IVehicleRepository repository;
-        public VehiclesController(IMapper mapper, ZaapDbContext context, IVehicleRepository repository)
+        private readonly IUnitOfWork unitofwork;
+        public VehiclesController(IMapper mapper, IVehicleRepository repository, IUnitOfWork unitofwork)
         {
+            this.unitofwork = unitofwork;
             this.repository = repository;
-            this.context = context;
             this.mapper = mapper;
 
         }
@@ -62,8 +63,8 @@ namespace Zaap.Controllers
             vehicle.LastUpdate = DateTime.Now;
 
 
-            context.Vehicles.Add(vehicle);
-            await context.SaveChangesAsync();
+            repository.Add(vehicle);
+            await unitofwork.CompleteAsync();
 
             vehicle = await repository.GetVehicle(vehicle.Id);
 
@@ -89,7 +90,7 @@ namespace Zaap.Controllers
             mapper.Map<SaveVehicleResource, Vehicle>(vehicleresource, vehicle);
             vehicle.LastUpdate = DateTime.Now;
 
-            await context.SaveChangesAsync();
+            await unitofwork.CompleteAsync();
 
             var result = mapper.Map<Vehicle, VehicleResource>(vehicle);
             return Ok(result);
@@ -100,13 +101,13 @@ namespace Zaap.Controllers
 
         public async Task<IActionResult> DeleteVehicle(int id)
         {
-            var vehicleid = await context.Vehicles.FindAsync(id);
+            var vehicleid = await repository.GetVehicle(id, includerelated: false);
             if (vehicleid == null)
             {
                 return NotFound($"the id {id} does not exist");
             }
-            context.Remove(vehicleid);
-            await context.SaveChangesAsync();
+            repository.Remove(vehicleid);
+            await unitofwork.CompleteAsync();
             return Ok(id);
         }
     }

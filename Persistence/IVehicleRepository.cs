@@ -5,6 +5,8 @@ namespace Zaap.Persistence
 {
     public interface IVehicleRepository
     {
-        Task<Vehicle> GetVehicle(int id);
+        Task<Vehicle> GetVehicle(int id, bool includerelated = true);
+        void Add(Vehicle vehicle);
+        void Remove(Vehicle vehicleid);
     }
 }
