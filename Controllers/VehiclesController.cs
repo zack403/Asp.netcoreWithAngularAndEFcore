@@ -91,7 +91,7 @@ namespace Zaap.Controllers
             vehicle.LastUpdate = DateTime.Now;
 
             await unitofwork.CompleteAsync();
-
+            vehicle = await repository.GetVehicle(vehicle.Id);
             var result = mapper.Map<Vehicle, VehicleResource>(vehicle);
             return Ok(result);
 

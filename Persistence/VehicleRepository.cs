@@ -14,7 +14,7 @@ namespace Zaap.Persistence
         }
         public async Task<Vehicle> GetVehicle(int id, bool includerelated = true)
         {
-            if (includerelated != false)
+            if (!includerelated)
                 return await context.Vehicles.FindAsync(id);
             return await context.Vehicles
                      .Include(v => v.Features)
